@@ -61,42 +61,43 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 恢复滚动位置和缩放比例
-            const topElement = document.getElementById('top');
-            const bottomElement = document.getElementById('bottom');
+        // 恢复滚动位置和缩放比例
+        window.onload = function() {
+            const topScroll = localStorage.getItem('topScroll');
+            const bottomScroll = localStorage.getItem('bottomScroll');
+            const topScale = localStorage.getItem('topScale') || 1;
+            const bottomScale = localStorage.getItem('bottomScale') || 1;
 
-            const restoreScrollPosition = (element, key) => {
-                const savedScroll = localStorage.getItem(key);
-                if (savedScroll !== null) {
-                    element.scrollTop = parseInt(savedScroll, 10) || 0;
-                }
+            document.getElementById('top').scrollTop = topScroll ? parseInt(topScroll) : 0;
+            document.getElementById('bottom').scrollTop = bottomScroll ? parseInt(bottomScroll) : 0;
+
+            const topImages = document.querySelectorAll('#top .image');
+            const bottomImages = document.querySelectorAll('#bottom .image');
+
+            topImages.forEach(img => {
+                img.style.width = `${100 * topScale}vw`;
+                img.style.height = 'auto';
+            });
+
+            bottomImages.forEach(img => {
+                img.style.width = `${100 * bottomScale}vw`;
+                img.style.height = 'auto';
+            });
+        };
+
+        // 保存滚动位置，使用setTimeout避免频繁存储
+        const saveScrollPosition = (element, key) => {
+            let timeout;
+            element.onscroll = function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    localStorage.setItem(key, this.scrollTop);
+                }, 100); // 100毫秒后保存滚动位置
             };
+        };
 
-            restoreScrollPosition(topElement, 'topScroll');
-            restoreScrollPosition(bottomElement, 'bottomScroll');
-
-            // 恢复缩放比例
-            const restoreZoom = (element, key) => {
-                const scale = localStorage.getItem(key) || 1;
-                const images = element.querySelectorAll('.image');
-                images.forEach(img => {
-                    img.style.width = `${100 * scale}vw`;
-                    img.style.height = 'auto';
-                });
-            };
-
-            restoreZoom(topElement, 'topScale');
-            restoreZoom(bottomElement, 'bottomScale');
-
-            // 保存滚动位置
-            topElement.onscroll = function() {
-                localStorage.setItem('topScroll', topElement.scrollTop);
-            };
-            bottomElement.onscroll = function() {
-                localStorage.setItem('bottomScroll', bottomElement.scrollTop);
-            };
-        });
+        saveScrollPosition(document.getElementById('top'), 'topScroll');
+        saveScrollPosition(document.getElementById('bottom'), 'bottomScroll');
 
         // 双指缩放功能
         function enablePinchZoom(element, key) {
