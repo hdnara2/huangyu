@@ -63,19 +63,23 @@
     <script>
         // 恢复滚动位置和缩放比例
         window.onload = function() {
-            document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
-            document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
+            const topElement = document.getElementById('top');
+            const bottomElement = document.getElementById('bottom');
+
+            const topScale = localStorage.getItem('topScale') || 1;
+            const bottomScale = localStorage.getItem('bottomScale') || 1;
+
+            topElement.scrollTop = (localStorage.getItem('topScroll') || 0) * topScale;
+            bottomElement.scrollTop = (localStorage.getItem('bottomScroll') || 0) * bottomScale;
 
             const topImages = document.querySelectorAll('#top .image');
             const bottomImages = document.querySelectorAll('#bottom .image');
 
-            const topScale = localStorage.getItem('topScale') || 1;
             topImages.forEach(img => {
                 img.style.width = `${100 * topScale}vw`;
                 img.style.height = 'auto';
             });
 
-            const bottomScale = localStorage.getItem('bottomScale') || 1;
             bottomImages.forEach(img => {
                 img.style.width = `${100 * bottomScale}vw`;
                 img.style.height = 'auto';
@@ -125,7 +129,9 @@
 
             element.addEventListener('gestureend', function(e) {
                 e.preventDefault();
-                saveScrollPosition(); // 缩放结束后保存滚动位置
+                // 调整滚动位置
+                const scrollAdjustment = (1 - scale) * element.scrollHeight / 2; // 计算调整值
+                element.scrollTop += scrollAdjustment; // 重新调整滚动位置
             });
         }
 
