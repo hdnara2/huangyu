@@ -63,16 +63,20 @@
     <script>
         // 恢复滚动位置和缩放比例
         window.onload = function() {
-            restoreScrollAndScale('top', 'topScale');
-            restoreScrollAndScale('bottom', 'bottomScale');
+            const topScroll = localStorage.getItem('topScroll') || 0;
+            const bottomScroll = localStorage.getItem('bottomScroll') || 0;
+            document.getElementById('top').scrollTop = topScroll;
+            document.getElementById('bottom').scrollTop = bottomScroll;
+
+            const topScale = localStorage.getItem('topScale') || 1;
+            const bottomScale = localStorage.getItem('bottomScale') || 1;
+
+            adjustImageSizes(document.getElementById('top'), topScale);
+            adjustImageSizes(document.getElementById('bottom'), bottomScale);
         };
 
-        function restoreScrollAndScale(sectionId, scaleKey) {
-            const section = document.getElementById(sectionId);
-            section.scrollTop = localStorage.getItem(sectionId + 'Scroll') || 0;
-
-            const images = section.querySelectorAll('.image');
-            const scale = localStorage.getItem(scaleKey) || 1;
+        function adjustImageSizes(element, scale) {
+            const images = element.querySelectorAll('.image');
             images.forEach(img => {
                 img.style.width = `${100 * scale}vw`;
                 img.style.height = 'auto';
@@ -109,18 +113,10 @@
                     scale = minScale;
                 }
 
-                // 更新每张图片的宽度
-                const images = element.querySelectorAll('.image');
-                images.forEach(img => {
-                    img.style.width = `${100 * scale}vw`;
-                    img.style.height = 'auto';
-                });
-
-                // 更新滚动位置
-                const currentScroll = element.scrollTop;
-                const newScroll = currentScroll * (scale / (scale * e.scale / startDistance));
-                element.scrollTop = newScroll;
-
+                // 先调整图片尺寸
+                adjustImageSizes(element, scale);
+                
+                // 保存缩放比例
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
             });
