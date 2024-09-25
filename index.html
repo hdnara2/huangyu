@@ -63,37 +63,29 @@
     <script>
         // 恢复滚动位置和缩放比例
         window.onload = function() {
-            const topElement = document.getElementById('top');
-            const bottomElement = document.getElementById('bottom');
-
-            const topScale = localStorage.getItem('topScale') || 1;
-            const bottomScale = localStorage.getItem('bottomScale') || 1;
-
-            topElement.scrollTop = (localStorage.getItem('topScroll') || 0) * topScale;
-            bottomElement.scrollTop = (localStorage.getItem('bottomScroll') || 0) * bottomScale;
-
-            const topImages = document.querySelectorAll('#top .image');
-            const bottomImages = document.querySelectorAll('#bottom .image');
-
-            topImages.forEach(img => {
-                img.style.width = `${100 * topScale}vw`;
-                img.style.height = 'auto';
-            });
-
-            bottomImages.forEach(img => {
-                img.style.width = `${100 * bottomScale}vw`;
-                img.style.height = 'auto';
-            });
+            restoreScrollAndScale('top', 'topScale');
+            restoreScrollAndScale('bottom', 'bottomScale');
         };
 
-        // 保存滚动位置
-        function saveScrollPosition() {
-            localStorage.setItem('topScroll', document.getElementById('top').scrollTop);
-            localStorage.setItem('bottomScroll', document.getElementById('bottom').scrollTop);
+        function restoreScrollAndScale(sectionId, scaleKey) {
+            const section = document.getElementById(sectionId);
+            section.scrollTop = localStorage.getItem(sectionId + 'Scroll') || 0;
+
+            const images = section.querySelectorAll('.image');
+            const scale = localStorage.getItem(scaleKey) || 1;
+            images.forEach(img => {
+                img.style.width = `${100 * scale}vw`;
+                img.style.height = 'auto';
+            });
         }
 
-        document.getElementById('top').onscroll = saveScrollPosition;
-        document.getElementById('bottom').onscroll = saveScrollPosition;
+        // 保存滚动位置
+        document.getElementById('top').onscroll = function() {
+            localStorage.setItem('topScroll', this.scrollTop);
+        };
+        document.getElementById('bottom').onscroll = function() {
+            localStorage.setItem('bottomScroll', this.scrollTop);
+        };
 
         // 双指缩放功能
         function enablePinchZoom(element, key) {
@@ -117,11 +109,17 @@
                     scale = minScale;
                 }
 
+                // 更新每张图片的宽度
                 const images = element.querySelectorAll('.image');
                 images.forEach(img => {
                     img.style.width = `${100 * scale}vw`;
                     img.style.height = 'auto';
                 });
+
+                // 更新滚动位置
+                const currentScroll = element.scrollTop;
+                const newScroll = currentScroll * (scale / (scale * e.scale / startDistance));
+                element.scrollTop = newScroll;
 
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
@@ -129,9 +127,6 @@
 
             element.addEventListener('gestureend', function(e) {
                 e.preventDefault();
-                // 调整滚动位置
-                const scrollAdjustment = (1 - scale) * element.scrollHeight / 2; // 计算调整值
-                element.scrollTop += scrollAdjustment; // 重新调整滚动位置
             });
         }
 
