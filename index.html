@@ -26,6 +26,8 @@
             padding: 0;
             width: 100%;
             touch-action: pan-y; /* 允许纵向滑动 */
+            display: flex;
+            justify-content: center; /* 水平居中 */
         }
 
         .image-container {
@@ -41,6 +43,7 @@
             display: block;
             margin: 0;
             transition: width 0.1s ease-out, height 0.1s ease-out; /* 修改为通过调整宽高来缩放 */
+            transform-origin: center top; /* 使缩放从图片的中心开始 */
         }
     </style>
 </head>
@@ -114,11 +117,12 @@
                     scale = minScale;
                 }
 
-                // 调整每张图片的宽度，而非使用 transform 来缩放
+                // 调整每张图片的宽度，同时确保居中
                 const images = element.querySelectorAll('.image');
                 images.forEach(img => {
                     img.style.width = `${100 * scale}vw`;
                     img.style.height = 'auto'; // 保持纵横比
+                    img.style.transformOrigin = 'center top'; // 缩放中心保持为图片中部
                 });
 
                 // 保存缩放比例
