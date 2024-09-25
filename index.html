@@ -29,18 +29,18 @@
         }
 
         .image-container {
-            padding: 0; /* 去掉内边距 */
-            margin: 0; /* 去掉外边距 */
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         .image {
-            width: 100vw; /* 设置为100vw以消除左右留白 */
+            width: 100vw;
             display: block;
-            transition: transform 0.1s ease-out;
-            margin: 0; /* 去掉图片底部的间隔 */
+            margin: 0;
+            transition: width 0.1s ease-out, height 0.1s ease-out; /* 修改为通过调整宽高来缩放 */
         }
     </style>
 </head>
@@ -66,8 +66,21 @@
         window.onload = function() {
             document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
-            document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
-            document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
+
+            const topImages = document.querySelectorAll('#top .image');
+            const bottomImages = document.querySelectorAll('#bottom .image');
+
+            const topScale = localStorage.getItem('topScale') || 1;
+            topImages.forEach(img => {
+                img.style.width = `${100 * topScale}vw`;
+                img.style.height = 'auto'; // 保持纵横比
+            });
+
+            const bottomScale = localStorage.getItem('bottomScale') || 1;
+            bottomImages.forEach(img => {
+                img.style.width = `${100 * bottomScale}vw`;
+                img.style.height = 'auto'; // 保持纵横比
+            });
         };
 
         // 保存滚动位置
@@ -80,7 +93,7 @@
 
         // 双指缩放功能
         function enablePinchZoom(element, key) {
-            let scale = 1;
+            let scale = localStorage.getItem(key) || 1;
             const maxScale = 3; // 最大缩放比例
             const minScale = 1; // 最小缩放比例
             let startDistance = null;
@@ -101,8 +114,14 @@
                     scale = minScale;
                 }
 
-                // 设置缩放并存储比例
-                element.style.transform = `scale(${scale})`;
+                // 调整每张图片的宽度，而非使用 transform 来缩放
+                const images = element.querySelectorAll('.image');
+                images.forEach(img => {
+                    img.style.width = `${100 * scale}vw`;
+                    img.style.height = 'auto'; // 保持纵横比
+                });
+
+                // 保存缩放比例
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
             });
