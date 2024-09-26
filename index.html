@@ -22,10 +22,11 @@
         .top, .bottom {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden; /* 禁止横向滚动 */
             -webkit-overflow-scrolling: touch;
             padding: 0;
             width: 100%;
-            touch-action: pan-y; /* 禁止横向滑动 */
+            touch-action: pan-y; /* 允许纵向滑动 */
         }
 
         .image-container {
@@ -57,15 +58,18 @@
     </div>
 
     <script>
-        // 恢复滚动位置和缩放比例
         window.onload = function() {
-            document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
-            document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
-            document.getElementById('image-container-top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
-            document.getElementById('image-container-bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
+            const topContainer = document.getElementById('top');
+            const bottomContainer = document.getElementById('bottom');
+            topContainer.scrollTop = localStorage.getItem('topScroll') || 0;
+            bottomContainer.scrollTop = localStorage.getItem('bottomScroll') || 0;
+
+            const topScale = localStorage.getItem('topScale') || 1;
+            const bottomScale = localStorage.getItem('bottomScale') || 1;
+            document.getElementById('image-container-top').style.transform = `scale(${topScale})`;
+            document.getElementById('image-container-bottom').style.transform = `scale(${bottomScale})`;
         };
 
-        // 保存滚动位置
         document.getElementById('top').onscroll = function() {
             localStorage.setItem('topScroll', this.scrollTop);
         };
@@ -94,7 +98,7 @@
                     scale = minScale;
                 }
 
-                imageContainer.style.transform = `scale(${scale})`;
+                imageContainer.style.transform = `scale(${scale})`; // 对整个容器应用缩放
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
             });
