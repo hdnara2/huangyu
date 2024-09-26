@@ -26,7 +26,7 @@
             padding: 0;
             width: 100%;
             touch-action: pan-y;
-            transform-origin: top; /* 确保缩放从顶部开始 */
+            transform-origin: top;
         }
 
         .image-container {
@@ -41,6 +41,7 @@
             width: 100vw;
             display: block;
             margin: 0;
+            image-rendering: crisp-edges; /* 改善图片缩放效果 */
         }
     </style>
 </head>
@@ -105,7 +106,7 @@
         const imageContainerTop = document.getElementById('image-container-top');
         for (let i = 1; i <= 5; i++) {
             const img = document.createElement('img');
-            img.src = `IMG_${String(i).padStart(5, '0')}.png`;
+            img.src = `IMG_${String(i).padStart(5, '0')}.png`; // 确保使用高分辨率图像
             img.alt = `Image ${i}`;
             img.className = 'image';
             imageContainerTop.appendChild(img);
@@ -114,7 +115,7 @@
         const imageContainerBottom = document.getElementById('image-container-bottom');
         for (let i = 6; i <= 10; i++) {
             const img = document.createElement('img');
-            img.src = `IMG_${String(i).padStart(5, '0')}.png`;
+            img.src = `IMG_${String(i).padStart(5, '0')}.png`; // 确保使用高分辨率图像
             img.alt = `Image ${i}`;
             img.className = 'image';
             imageContainerBottom.appendChild(img);
