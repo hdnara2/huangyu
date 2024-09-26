@@ -26,7 +26,6 @@
             padding: 0;
             width: 100%;
             touch-action: pan-y; /* 允许纵向滑动 */
-            position: relative; /* 允许子元素绝对定位 */
         }
 
         .image-container {
@@ -35,15 +34,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: transform 0.1s ease-out; /* 添加平滑过渡 */
         }
 
         .image {
             width: 100vw;
             display: block;
-            transition: transform 0.1s ease-out, margin 0.1s ease-out; /* 增加 margin 的过渡效果 */
-            margin: 0; /* 初始 margin 设置为0 */
-            position: relative; /* 让图片相对定位 */
-            z-index: 1; /* 确保图片在前面 */
+            margin: 0;
         }
     </style>
 </head>
@@ -93,13 +90,7 @@
                     scale = minScale;
                 }
 
-                const marginIncrease = (scale - 1) * 20; // 根据缩放比例调整间距，这里设置为每增加1的缩放增加20px的间距
-
-                Array.from(imageContainer.children).forEach(img => {
-                    img.style.transform = `scale(${scale})`;
-                    img.style.margin = `${marginIncrease}px 0`; // 设置上下边距
-                });
-
+                imageContainer.style.transform = `scale(${scale})`; // 对整个容器应用缩放
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
             });
