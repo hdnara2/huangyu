@@ -27,7 +27,6 @@
             width: 100%;
             touch-action: pan-y;
             position: relative;
-            transition: margin 0.1s ease-out; /* 添加过渡效果 */
         }
 
         .image-container {
@@ -52,10 +51,12 @@
 <body>
     <div class="split">
         <div class="top" id="top">
-            <div class="image-container" id="image-container-top"></div>
+            <div class="image-container" id="image-container-top">
+            </div>
         </div>
         <div class="bottom" id="bottom">
-            <div class="image-container" id="image-container-bottom"></div>
+            <div class="image-container" id="image-container-bottom">
+            </div>
         </div>
     </div>
 
@@ -72,7 +73,7 @@
             localStorage.setItem('bottomScroll', this.scrollTop);
         };
 
-        function enablePinchZoom(imageContainer, key, oppositeContainer) {
+        function enablePinchZoom(imageContainer, key) {
             let scale = 1;
             const maxScale = 3;
             const minScale = 1;
@@ -93,14 +94,12 @@
                     scale = minScale;
                 }
 
-                Array.from(imageContainer.children).forEach(img => {
+                // 更新图片的缩放和间距
+                Array.from(imageContainer.children).forEach((img, index) => {
                     img.style.transform = `scale(${scale})`;
+                    img.style.marginTop = `${(scale - 1) * 20}px`; // 根据缩放比例增加间距
+                    img.style.marginBottom = `${(scale - 1) * 20}px`;
                 });
-
-                // 调整上下间距
-                const marginAdjustment = (scale - 1) * 50; // 调整的间距
-                imageContainer.parentNode.style.marginBottom = `${marginAdjustment}px`;
-                oppositeContainer.style.marginTop = `${marginAdjustment}px`;
 
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
@@ -129,8 +128,8 @@
             imageContainerBottom.appendChild(img);
         }
 
-        enablePinchZoom(imageContainerTop, 'topScale', document.getElementById('bottom'));
-        enablePinchZoom(imageContainerBottom, 'bottomScale', document.getElementById('top'));
+        enablePinchZoom(imageContainerTop, 'topScale');
+        enablePinchZoom(imageContainerBottom, 'bottomScale');
     </script>
 </body>
 </html>
