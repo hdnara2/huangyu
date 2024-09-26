@@ -26,8 +26,8 @@
             padding: 0;
             width: 100%;
             touch-action: pan-y;
+            position: relative;
             transform-origin: top; /* 确保缩放从顶部开始 */
-            will-change: transform; /* 提高性能 */
         }
 
         .image-container {
@@ -42,7 +42,16 @@
             width: 100vw;
             display: block;
             margin: 0;
-            will-change: transform; /* 提高性能 */
+        }
+
+        .scaled {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.1s ease-out;
+            pointer-events: none; /* 禁止事件干扰 */
         }
     </style>
 </head>
@@ -51,10 +60,12 @@
         <div class="top" id="top">
             <div class="image-container" id="image-container-top">
             </div>
+            <div class="scaled" id="scaled-top"></div>
         </div>
         <div class="bottom" id="bottom">
             <div class="image-container" id="image-container-bottom">
             </div>
+            <div class="scaled" id="scaled-bottom"></div>
         </div>
     </div>
 
@@ -62,8 +73,6 @@
         window.onload = function() {
             document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
-            document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
-            document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
         };
 
         document.getElementById('top').onscroll = function() {
@@ -73,7 +82,7 @@
             localStorage.setItem('bottomScroll', this.scrollTop);
         };
 
-        function enablePinchZoom(container, key) {
+        function enablePinchZoom(container, scaledDiv, key) {
             let scale = 1;
             const maxScale = 3;
             const minScale = 1;
@@ -94,7 +103,7 @@
                     scale = minScale;
                 }
 
-                container.style.transform = `scale(${scale})`;
+                scaledDiv.style.transform = `scale(${scale})`;
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
             });
@@ -122,8 +131,8 @@
             imageContainerBottom.appendChild(img);
         }
 
-        enablePinchZoom(imageContainerTop.parentNode, 'topScale');
-        enablePinchZoom(imageContainerBottom.parentNode, 'bottomScale');
+        enablePinchZoom(document.getElementById('top'), document.getElementById('scaled-top'), 'topScale');
+        enablePinchZoom(document.getElementById('bottom'), document.getElementById('scaled-bottom'), 'bottomScale');
     </script>
 </body>
 </html>
