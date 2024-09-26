@@ -42,7 +42,7 @@
             width: 100vw;
             display: block;
             transition: transform 0.1s ease-out;
-            margin: 0;
+            margin: 0; /* 初始间距 */
             position: relative;
             z-index: 1;
         }
@@ -71,7 +71,7 @@
             localStorage.setItem('bottomScroll', this.scrollTop);
         };
 
-        function enablePinchZoom(imageContainer, key, otherContainer) {
+        function enablePinchZoom(imageContainer, key) {
             let scale = 1;
             const maxScale = 3;
             const minScale = 1;
@@ -92,15 +92,10 @@
                     scale = minScale;
                 }
 
-                Array.from(imageContainer.children).forEach(img => {
+                Array.from(imageContainer.children).forEach((img, index) => {
                     img.style.transform = `scale(${scale})`;
+                    img.style.margin = `${(1 - scale) * 100 / 2}px 0`; // 动态调整上下间距
                 });
-
-                // Adjust margin to prevent overlap
-                const offset = (scale - 1) * 50; // Adjust this value as needed
-                if (otherContainer) {
-                    otherContainer.style.marginTop = `${offset}px`;
-                }
 
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
@@ -129,8 +124,8 @@
             imageContainerBottom.appendChild(img);
         }
 
-        enablePinchZoom(imageContainerTop, 'topScale', document.getElementById('bottom'));
-        enablePinchZoom(imageContainerBottom, 'bottomScale', document.getElementById('top'));
+        enablePinchZoom(imageContainerTop, 'topScale');
+        enablePinchZoom(imageContainerBottom, 'bottomScale');
     </script>
 </body>
 </html>
