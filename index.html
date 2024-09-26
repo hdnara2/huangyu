@@ -25,7 +25,7 @@
             -webkit-overflow-scrolling: touch;
             padding: 0;
             width: 100%;
-            touch-action: pan-y;
+            touch-action: pan-y; /* 允许纵向滑动 */
         }
 
         .image-container {
@@ -41,17 +41,18 @@
             display: block;
             transition: transform 0.1s ease-out;
             margin: 0;
-            image-rendering: crisp-edges; /* 提高缩放后的清晰度 */
         }
     </style>
 </head>
 <body>
     <div class="split">
         <div class="top" id="top">
-            <div class="image-container" id="image-container-top"></div>
+            <div class="image-container" id="image-container-top">
+            </div>
         </div>
         <div class="bottom" id="bottom">
-            <div class="image-container" id="image-container-bottom"></div>
+            <div class="image-container" id="image-container-bottom">
+            </div>
         </div>
     </div>
 
@@ -59,8 +60,6 @@
         window.onload = function() {
             document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
-            document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
-            document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
         };
 
         document.getElementById('top').onscroll = function() {
@@ -70,18 +69,18 @@
             localStorage.setItem('bottomScroll', this.scrollTop);
         };
 
-        function enablePinchZoom(element, key) {
+        function enablePinchZoom(imageContainer, key) {
             let scale = 1;
             const maxScale = 3;
             const minScale = 1;
             let startDistance = null;
 
-            element.addEventListener('gesturestart', function(e) {
+            imageContainer.addEventListener('gesturestart', function(e) {
                 e.preventDefault();
                 startDistance = e.scale;
             });
 
-            element.addEventListener('gesturechange', function(e) {
+            imageContainer.addEventListener('gesturechange', function(e) {
                 e.preventDefault();
                 scale *= e.scale / startDistance;
 
@@ -91,18 +90,18 @@
                     scale = minScale;
                 }
 
-                element.style.transform = `scale(${scale})`;
+                Array.from(imageContainer.children).forEach(img => {
+                    img.style.transform = `scale(${scale})`;
+                });
+
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
             });
 
-            element.addEventListener('gestureend', function(e) {
+            imageContainer.addEventListener('gestureend', function(e) {
                 e.preventDefault();
             });
         }
-
-        enablePinchZoom(document.getElementById('top'), 'topScale');
-        enablePinchZoom(document.getElementById('bottom'), 'bottomScale');
 
         const imageContainerTop = document.getElementById('image-container-top');
         for (let i = 1; i <= 5; i++) {
@@ -121,6 +120,9 @@
             img.className = 'image';
             imageContainerBottom.appendChild(img);
         }
+
+        enablePinchZoom(imageContainerTop, 'topScale');
+        enablePinchZoom(imageContainerBottom, 'bottomScale');
     </script>
 </body>
 </html>
