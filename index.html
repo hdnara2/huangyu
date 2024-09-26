@@ -25,8 +25,8 @@
             -webkit-overflow-scrolling: touch;
             padding: 0;
             width: 100%;
-            touch-action: pan-y;
-            position: relative;
+            touch-action: pan-y; /* 允许纵向滑动 */
+            position: relative; /* 允许子元素绝对定位 */
         }
 
         .image-container {
@@ -35,16 +35,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow: hidden;
         }
 
         .image {
             width: 100vw;
             display: block;
-            transition: transform 0.1s ease-out;
-            margin: 0;
-            position: relative;
-            z-index: 1;
+            transition: transform 0.1s ease-out, margin 0.1s ease-out; /* 增加 margin 的过渡效果 */
+            margin: 0; /* 初始 margin 设置为0 */
+            position: relative; /* 让图片相对定位 */
+            z-index: 1; /* 确保图片在前面 */
         }
     </style>
 </head>
@@ -94,11 +93,11 @@
                     scale = minScale;
                 }
 
-                // 更新图片的缩放和间距
-                Array.from(imageContainer.children).forEach((img, index) => {
+                const marginIncrease = (scale - 1) * 20; // 根据缩放比例调整间距，这里设置为每增加1的缩放增加20px的间距
+
+                Array.from(imageContainer.children).forEach(img => {
                     img.style.transform = `scale(${scale})`;
-                    img.style.marginTop = `${(scale - 1) * 20}px`; // 根据缩放比例增加间距
-                    img.style.marginBottom = `${(scale - 1) * 20}px`;
+                    img.style.margin = `${marginIncrease}px 0`; // 设置上下边距
                 });
 
                 localStorage.setItem(key, scale);
