@@ -22,11 +22,11 @@
         .top, .bottom {
             flex: 1;
             overflow-y: auto;
-            overflow-x: hidden;
+            overflow-x: hidden; /* 禁止横向滚动 */
             -webkit-overflow-scrolling: touch;
             padding: 0;
             width: 100%;
-            touch-action: pan-y;
+            touch-action: pan-y; /* 允许纵向滑动 */
         }
 
         .image-container {
@@ -35,7 +35,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.1s ease-out;
+            transform-origin: top left; /* 设置缩放的基点为左上角 */
+            transition: transform 0.1s ease-out; /* 添加平滑过渡 */
         }
 
         .image {
@@ -59,25 +60,33 @@
 
     <script>
         window.onload = function() {
-            const topContainer = document.getElementById('top');
-            const bottomContainer = document.getElementById('bottom');
-            topContainer.scrollTop = localStorage.getItem('topScroll') || 0;
-            bottomContainer.scrollTop = localStorage.getItem('bottomScroll') || 0;
+            // 获取滚动位置和缩放比例
+            document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
+            document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
 
             const topScale = localStorage.getItem('topScale') || 1;
             const bottomScale = localStorage.getItem('bottomScale') || 1;
-            document.getElementById('image-container-top').style.transform = `scale(${topScale})`;
-            document.getElementById('image-container-bottom').style.transform = `scale(${bottomScale})`;
+
+            setScale(document.getElementById('image-container-top'), topScale);
+            setScale(document.getElementById('image-container-bottom'), bottomScale);
         };
 
         document.getElementById('top').onscroll = function() {
             localStorage.setItem('topScroll', this.scrollTop);
         };
+
         document.getElementById('bottom').onscroll = function() {
             localStorage.setItem('bottomScroll', this.scrollTop);
         };
 
-        function enablePinchZoom(imageContainer, key, scrollContainer) {
+        // 设置缩放并调整容器高度
+        function setScale(container, scale) {
+            container.style.transform = `scale(${scale})`;
+            container.style.height = `${container.scrollHeight * scale}px`; // 动态调整高度
+        }
+
+        // 启用双指缩放功能
+        function enablePinchZoom(imageContainer, key) {
             let scale = 1;
             const maxScale = 3;
             const minScale = 1;
@@ -98,13 +107,9 @@
                     scale = minScale;
                 }
 
-                imageContainer.style.transform = `scale(${scale})`;
-                localStorage.setItem(key, scale);
+                setScale(imageContainer, scale); // 调整缩放比例和高度
+                localStorage.setItem(key, scale); // 保存缩放比例
                 startDistance = e.scale;
-
-                // 调整滚动位置以查看顶部细节
-                const topOffset = (scrollContainer.scrollTop + e.target.getBoundingClientRect().top) * (scale - 1);
-                scrollContainer.scrollTop += topOffset;
             });
 
             imageContainer.addEventListener('gestureend', function(e) {
@@ -130,8 +135,8 @@
             imageContainerBottom.appendChild(img);
         }
 
-        enablePinchZoom(imageContainerTop, 'topScale', document.getElementById('top'));
-        enablePinchZoom(imageContainerBottom, 'bottomScale', document.getElementById('bottom'));
+        enablePinchZoom(imageContainerTop, 'topScale');
+        enablePinchZoom(imageContainerBottom, 'bottomScale');
     </script>
 </body>
 </html>
