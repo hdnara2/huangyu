@@ -26,6 +26,7 @@
             padding: 0;
             width: 100%;
             touch-action: pan-y; /* 允许纵向滑动 */
+            position: relative; /* 允许子元素绝对定位 */
         }
 
         .image-container {
@@ -34,6 +35,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow: hidden; /* 限制超出范围的内容 */
         }
 
         .image {
@@ -41,6 +43,8 @@
             display: block;
             transition: transform 0.1s ease-out;
             margin: 0;
+            position: relative; /* 让图片相对定位 */
+            z-index: 1; /* 确保图片在前面 */
         }
     </style>
 </head>
