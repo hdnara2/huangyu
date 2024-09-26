@@ -25,7 +25,8 @@
             -webkit-overflow-scrolling: touch;
             padding: 0;
             width: 100%;
-            touch-action: pan-y; /* 允许纵向滑动 */
+            touch-action: pan-y;
+            transform-origin: top; /* 确保缩放从顶部开始 */
         }
 
         .image-container {
@@ -34,7 +35,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.1s ease-out;
         }
 
         .image {
@@ -60,6 +60,8 @@
         window.onload = function() {
             document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
+            document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
+            document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
         };
 
         document.getElementById('top').onscroll = function() {
@@ -69,18 +71,18 @@
             localStorage.setItem('bottomScroll', this.scrollTop);
         };
 
-        function enablePinchZoom(imageContainer, key) {
+        function enablePinchZoom(container, key) {
             let scale = 1;
             const maxScale = 3;
             const minScale = 1;
             let startDistance = null;
 
-            imageContainer.addEventListener('gesturestart', function(e) {
+            container.addEventListener('gesturestart', function(e) {
                 e.preventDefault();
                 startDistance = e.scale;
             });
 
-            imageContainer.addEventListener('gesturechange', function(e) {
+            container.addEventListener('gesturechange', function(e) {
                 e.preventDefault();
                 scale *= e.scale / startDistance;
 
@@ -90,13 +92,12 @@
                     scale = minScale;
                 }
 
-                // 对整个容器进行缩放
-                imageContainer.style.transform = `scale(${scale})`;
+                container.style.transform = `scale(${scale})`;
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
             });
 
-            imageContainer.addEventListener('gestureend', function(e) {
+            container.addEventListener('gestureend', function(e) {
                 e.preventDefault();
             });
         }
@@ -119,8 +120,8 @@
             imageContainerBottom.appendChild(img);
         }
 
-        enablePinchZoom(imageContainerTop, 'topScale');
-        enablePinchZoom(imageContainerBottom, 'bottomScale');
+        enablePinchZoom(imageContainerTop.parentNode, 'topScale');
+        enablePinchZoom(imageContainerBottom.parentNode, 'bottomScale');
     </script>
 </body>
 </html>
