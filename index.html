@@ -27,6 +27,7 @@
             width: 100%;
             touch-action: pan-y;
             position: relative;
+            transition: margin 0.1s ease-out; /* 添加过渡效果 */
         }
 
         .image-container {
@@ -42,7 +43,7 @@
             width: 100vw;
             display: block;
             transition: transform 0.1s ease-out;
-            margin: 0; /* 初始间距 */
+            margin: 0;
             position: relative;
             z-index: 1;
         }
@@ -71,7 +72,7 @@
             localStorage.setItem('bottomScroll', this.scrollTop);
         };
 
-        function enablePinchZoom(imageContainer, key) {
+        function enablePinchZoom(imageContainer, key, oppositeContainer) {
             let scale = 1;
             const maxScale = 3;
             const minScale = 1;
@@ -92,10 +93,14 @@
                     scale = minScale;
                 }
 
-                Array.from(imageContainer.children).forEach((img, index) => {
+                Array.from(imageContainer.children).forEach(img => {
                     img.style.transform = `scale(${scale})`;
-                    img.style.margin = `${(1 - scale) * 100 / 2}px 0`; // 动态调整上下间距
                 });
+
+                // 调整上下间距
+                const marginAdjustment = (scale - 1) * 50; // 调整的间距
+                imageContainer.parentNode.style.marginBottom = `${marginAdjustment}px`;
+                oppositeContainer.style.marginTop = `${marginAdjustment}px`;
 
                 localStorage.setItem(key, scale);
                 startDistance = e.scale;
@@ -124,8 +129,8 @@
             imageContainerBottom.appendChild(img);
         }
 
-        enablePinchZoom(imageContainerTop, 'topScale');
-        enablePinchZoom(imageContainerBottom, 'bottomScale');
+        enablePinchZoom(imageContainerTop, 'topScale', document.getElementById('bottom'));
+        enablePinchZoom(imageContainerBottom, 'bottomScale', document.getElementById('top'));
     </script>
 </body>
 </html>
