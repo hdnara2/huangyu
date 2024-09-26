@@ -22,7 +22,6 @@
         .top, .bottom {
             flex: 1;
             overflow-y: auto;
-            overflow-x: hidden; /* 禁止横向滚动 */
             -webkit-overflow-scrolling: touch;
             padding: 0;
             width: 100%;
@@ -35,8 +34,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transform-origin: top center; /* 设置缩放基点为顶部中央 */
-            transition: transform 0.1s ease-out; /* 添加平滑过渡 */
+            transition: transform 0.1s ease-out;
         }
 
         .image {
@@ -60,32 +58,17 @@
 
     <script>
         window.onload = function() {
-            // 获取滚动位置和缩放比例
             document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
-
-            const topScale = localStorage.getItem('topScale') || 1;
-            const bottomScale = localStorage.getItem('bottomScale') || 1;
-
-            setScale(document.getElementById('image-container-top'), topScale);
-            setScale(document.getElementById('image-container-bottom'), bottomScale);
         };
 
         document.getElementById('top').onscroll = function() {
             localStorage.setItem('topScroll', this.scrollTop);
         };
-
         document.getElementById('bottom').onscroll = function() {
             localStorage.setItem('bottomScroll', this.scrollTop);
         };
 
-        // 设置缩放并调整容器高度
-        function setScale(container, scale) {
-            container.style.transform = `scale(${scale})`;
-            container.style.height = `${container.scrollHeight * scale}px`; // 动态调整高度
-        }
-
-        // 启用双指缩放功能
         function enablePinchZoom(imageContainer, key) {
             let scale = 1;
             const maxScale = 3;
@@ -107,8 +90,9 @@
                     scale = minScale;
                 }
 
-                setScale(imageContainer, scale); // 调整缩放比例和高度
-                localStorage.setItem(key, scale); // 保存缩放比例
+                // 对整个容器进行缩放
+                imageContainer.style.transform = `scale(${scale})`;
+                localStorage.setItem(key, scale);
                 startDistance = e.scale;
             });
 
