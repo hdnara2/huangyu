@@ -13,34 +13,23 @@
             width: 100vw;
         }
 
-        .container {
-            position: relative;
-            width: 100vw; /* 根据原图宽度设置 */
-            height: 100vh; /* 根据原图高度设置 */
+        .split {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .top, .bottom {
-            position: absolute;
-            width: 100%; /* 宽度与容器相同 */
-            height: 50%; /* 高度各占一半 */
+            display: flex;
+            justify-content: center; /* 居中对齐 */
+            align-items: center; /* 垂直居中 */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 0;
+            width: 100%;
             touch-action: pan-y;
-            transform-origin: top;
-        }
-
-        .top {
-            top: 0; /* 顶部 */
-        }
-
-        .bottom {
-            bottom: 0; /* 底部 */
         }
 
         .image-container {
-            padding: 0;
-            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -55,23 +44,38 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="split">
         <div class="top" id="top">
             <div class="image-container" id="image-container-top">
+                <!-- 图片将动态添加到这里 -->
             </div>
         </div>
         <div class="bottom" id="bottom">
             <div class="image-container" id="image-container-bottom">
+                <!-- 图片将动态添加到这里 -->
             </div>
         </div>
     </div>
 
     <script>
+        const originalImageWidth = 800; // 替换为原图宽度
+        const originalImageHeight = 600; // 替换为原图高度
+
         window.onload = function() {
-            document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
-            document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
-            document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
-            document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
+            const topContainer = document.getElementById('top');
+            const bottomContainer = document.getElementById('bottom');
+
+            // 设置容器的高度和宽度
+            topContainer.style.height = `${originalImageHeight / 2}px`;
+            bottomContainer.style.height = `${originalImageHeight / 2}px`;
+            topContainer.style.width = `${originalImageWidth}px`;
+            bottomContainer.style.width = `${originalImageWidth}px`;
+
+            // 恢复滚动位置和缩放比例
+            topContainer.scrollTop = localStorage.getItem('topScroll') || 0;
+            bottomContainer.scrollTop = localStorage.getItem('bottomScroll') || 0;
+            topContainer.style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
+            bottomContainer.style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
         };
 
         document.getElementById('top').onscroll = function() {
@@ -122,8 +126,8 @@
             imageContainerBottom.appendChild(img);
         }
 
-        enablePinchZoom(document.getElementById('top'), 'topScale');
-        enablePinchZoom(document.getElementById('bottom'), 'bottomScale');
+        enablePinchZoom(imageContainerTop.parentNode, 'topScale');
+        enablePinchZoom(imageContainerBottom.parentNode, 'bottomScale');
     </script>
 </body>
 </html>
