@@ -72,8 +72,6 @@
 
         function enablePinchZoom(container, key) {
             let scale = 1;
-            const maxScale = 3;
-            const minScale = 1;
             let startDistance = null;
 
             container.addEventListener('gesturestart', function(e) {
@@ -84,12 +82,6 @@
             container.addEventListener('gesturechange', function(e) {
                 e.preventDefault();
                 scale *= e.scale / startDistance;
-
-                if (scale > maxScale) {
-                    scale = maxScale;
-                } else if (scale < minScale) {
-                    scale = minScale;
-                }
 
                 container.style.transform = `scale(${scale})`;
                 localStorage.setItem(key, scale);
