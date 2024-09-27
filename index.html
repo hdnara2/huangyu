@@ -97,9 +97,6 @@
                 container.style.transform = `scale(${scale})`;
                 localStorage.setItem(key, scale);
 
-                // 重新渲染图片
-                updateImages(container, scale);
-
                 startDistance = e.scale;
             });
 
@@ -108,19 +105,10 @@
             });
         }
 
-        function updateImages(container, scale) {
-            const images = container.querySelectorAll('.image');
-            images.forEach((img) => {
-                // 根据当前缩放比例更新图片源
-                img.src = img.dataset.src; // 使用原图路径
-            });
-        }
-
         const imageContainerTop = document.getElementById('image-container-top');
         for (let i = 1; i <= 5; i++) {
             const img = document.createElement('img');
             img.src = `IMG_${String(i).padStart(5, '0')}.png`; // 原图路径
-            img.dataset.src = img.src; // 保存原图路径
             img.alt = `Image ${i}`;
             img.className = 'image';
             imageContainerTop.appendChild(img);
@@ -130,7 +118,6 @@
         for (let i = 6; i <= 10; i++) {
             const img = document.createElement('img');
             img.src = `IMG_${String(i).padStart(5, '0')}.png`; // 原图路径
-            img.dataset.src = img.src; // 保存原图路径
             img.alt = `Image ${i}`;
             img.className = 'image';
             imageContainerBottom.appendChild(img);
