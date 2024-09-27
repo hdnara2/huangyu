@@ -20,28 +20,27 @@
         }
 
         .top, .bottom {
-            flex: none; /* 不受屏幕限制，使用内容高度 */
-            overflow-y: auto;
+            flex: 1;
+            overflow: hidden; /* 隐藏溢出内容 */
             -webkit-overflow-scrolling: touch;
             padding: 0;
-            width: auto; /* 容器宽度自适应原图 */
+            width: 100%;
             touch-action: pan-y;
-            transform-origin: top; /* 确保缩放从顶部开始 */
+            transform-origin: top;
         }
 
         .image-container {
-            padding: 0;
-            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: auto; /* 自动高度以适应原图 */
         }
 
         .image {
             display: block;
             margin: 0;
-            width: auto; /* 使用原始图像宽度 */
-            height: auto; /* 使用原始图像高度 */
+            height: auto; /* 保持原始高度 */
+            width: auto; /* 保持原始宽度 */
         }
     </style>
 </head>
