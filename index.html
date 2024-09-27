@@ -11,28 +11,22 @@
             height: 100%;
             overflow: hidden;
             width: 100vw;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         .split {
             display: flex;
             flex-direction: column;
             height: 100%;
-            width: 100%;
-            justify-content: center; /* 垂直居中 */
         }
 
         .top, .bottom {
-            display: flex;
-            justify-content: center; /* 水平居中 */
-            align-items: center; /* 垂直居中 */
+            flex: none; /* 禁用自动伸展 */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 0;
             width: 100%;
             touch-action: pan-y;
+            transform-origin: top;
         }
 
         .image-container {
@@ -65,6 +59,14 @@
 
     <script>
         window.onload = function() {
+            const topContainer = document.getElementById('top');
+            const bottomContainer = document.getElementById('bottom');
+            const img1 = new Image();
+            img1.src = `IMG_00001.png`;
+            img1.onload = function() {
+                topContainer.style.height = img1.height + 'px';
+                bottomContainer.style.height = img1.height + 'px';
+            };
             document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
             document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
