@@ -20,16 +20,18 @@
         }
 
         .top, .bottom {
-            display: flex;
-            justify-content: center; /* 居中对齐 */
-            align-items: center; /* 垂直居中 */
+            flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            width: 100%;
+            padding: 0;
+            width: 5000px; /* 设置宽度为5000像素 */
             touch-action: pan-y;
+            transform-origin: top;
         }
 
         .image-container {
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -47,35 +49,20 @@
     <div class="split">
         <div class="top" id="top">
             <div class="image-container" id="image-container-top">
-                <!-- 图片将动态添加到这里 -->
             </div>
         </div>
         <div class="bottom" id="bottom">
             <div class="image-container" id="image-container-bottom">
-                <!-- 图片将动态添加到这里 -->
             </div>
         </div>
     </div>
 
     <script>
-        const originalImageWidth = 800; // 替换为原图宽度
-        const originalImageHeight = 600; // 替换为原图高度
-
         window.onload = function() {
-            const topContainer = document.getElementById('top');
-            const bottomContainer = document.getElementById('bottom');
-
-            // 设置容器的高度和宽度
-            topContainer.style.height = `${originalImageHeight / 2}px`;
-            bottomContainer.style.height = `${originalImageHeight / 2}px`;
-            topContainer.style.width = `${originalImageWidth}px`;
-            bottomContainer.style.width = `${originalImageWidth}px`;
-
-            // 恢复滚动位置和缩放比例
-            topContainer.scrollTop = localStorage.getItem('topScroll') || 0;
-            bottomContainer.scrollTop = localStorage.getItem('bottomScroll') || 0;
-            topContainer.style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
-            bottomContainer.style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
+            document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
+            document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
+            document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
+            document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
         };
 
         document.getElementById('top').onscroll = function() {
