@@ -21,26 +21,25 @@
 
         .top, .bottom {
             flex: 1;
-            overflow: hidden; /* 隐藏溢出内容 */
+            overflow: hidden; /* 隐藏超出部分 */
             -webkit-overflow-scrolling: touch;
             padding: 0;
             width: 100%;
             touch-action: pan-y;
-            transform-origin: top;
+            transform-origin: top; /* 确保缩放从顶部开始 */
         }
 
         .image-container {
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: auto; /* 自动高度以适应原图 */
         }
 
         .image {
             display: block;
             margin: 0;
-            height: auto; /* 保持原始高度 */
-            width: auto; /* 保持原始宽度 */
         }
     </style>
 </head>
@@ -57,11 +56,23 @@
     </div>
 
     <script>
+        const originalImageHeight = 800; // 假设原图高度为800px
+
         window.onload = function() {
-            document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
-            document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
-            document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
-            document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
+            const topContainer = document.getElementById('top');
+            const bottomContainer = document.getElementById('bottom');
+
+            // 设置容器高度为原图高度
+            topContainer.style.height = `${originalImageHeight}px`;
+            bottomContainer.style.height = `${originalImageHeight}px`;
+
+            // 恢复滚动位置
+            topContainer.scrollTop = localStorage.getItem('topScroll') || 0;
+            bottomContainer.scrollTop = localStorage.getItem('bottomScroll') || 0;
+
+            // 恢复缩放比例
+            topContainer.style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
+            bottomContainer.style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
         };
 
         document.getElementById('top').onscroll = function() {
@@ -100,6 +111,8 @@
             img.src = `IMG_${String(i).padStart(5, '0')}.png`;
             img.alt = `Image ${i}`;
             img.className = 'image';
+            img.style.width = 'auto'; // 使用原始图像宽度
+            img.style.height = 'auto'; // 使用原始图像高度
             imageContainerTop.appendChild(img);
         }
 
@@ -109,6 +122,8 @@
             img.src = `IMG_${String(i).padStart(5, '0')}.png`;
             img.alt = `Image ${i}`;
             img.className = 'image';
+            img.style.width = 'auto'; // 使用原始图像宽度
+            img.style.height = 'auto'; // 使用原始图像高度
             imageContainerBottom.appendChild(img);
         }
 
