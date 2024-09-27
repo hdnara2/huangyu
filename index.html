@@ -13,20 +13,29 @@
             width: 100vw;
         }
 
-        .split {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+        .container {
+            position: relative;
+            width: 100vw; /* 根据原图宽度设置 */
+            height: 100vh; /* 根据原图高度设置 */
         }
 
         .top, .bottom {
-            flex: none; /* 禁用自动伸展 */
+            position: absolute;
+            width: 100%; /* 宽度与容器相同 */
+            height: 50%; /* 高度各占一半 */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 0;
-            width: 100%;
             touch-action: pan-y;
             transform-origin: top;
+        }
+
+        .top {
+            top: 0; /* 顶部 */
+        }
+
+        .bottom {
+            bottom: 0; /* 底部 */
         }
 
         .image-container {
@@ -46,7 +55,7 @@
     </style>
 </head>
 <body>
-    <div class="split">
+    <div class="container">
         <div class="top" id="top">
             <div class="image-container" id="image-container-top">
             </div>
@@ -59,14 +68,6 @@
 
     <script>
         window.onload = function() {
-            const topContainer = document.getElementById('top');
-            const bottomContainer = document.getElementById('bottom');
-            const img1 = new Image();
-            img1.src = `IMG_00001.png`;
-            img1.onload = function() {
-                topContainer.style.height = img1.height + 'px';
-                bottomContainer.style.height = img1.height + 'px';
-            };
             document.getElementById('top').scrollTop = localStorage.getItem('topScroll') || 0;
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
             document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
@@ -121,8 +122,8 @@
             imageContainerBottom.appendChild(img);
         }
 
-        enablePinchZoom(imageContainerTop.parentNode, 'topScale');
-        enablePinchZoom(imageContainerBottom.parentNode, 'bottomScale');
+        enablePinchZoom(document.getElementById('top'), 'topScale');
+        enablePinchZoom(document.getElementById('bottom'), 'bottomScale');
     </script>
 </body>
 </html>
