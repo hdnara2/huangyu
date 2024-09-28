@@ -21,8 +21,19 @@
             margin-left: -450vw;
         }
 
-        .top, .bottom {
+        .top {
             flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden; /* 禁用横向滚动 */
+            -webkit-overflow-scrolling: touch;
+            padding: 0;
+            width: 100%;
+            touch-action: pan-y; /* 允许纵向滑动 150 2 300 5 450 8 600*/
+            transform-origin: top;
+        }
+
+       .bottom {
+            flex: 11;
             overflow-y: auto;
             overflow-x: hidden; /* 禁用横向滚动 */
             -webkit-overflow-scrolling: touch;
@@ -31,7 +42,7 @@
             touch-action: pan-y; /* 允许纵向滑动 */
             transform-origin: top;
         }
-
+        
         .image-container {
             padding: 0;
             margin: 0;
