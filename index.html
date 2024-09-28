@@ -21,22 +21,23 @@
 
         .top {
             flex: 1;
-            width: 5000px; /* 上半部分宽度为5000像素 */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 0;
+            width: 100%;
             touch-action: pan-y;
             transform-origin: top;
         }
 
         .bottom {
             flex: 1;
-            width: 600px; /* 下半部分宽度为600像素 */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 0;
+            width: 700px; /* 设置下半框容器宽度为700px */
             touch-action: pan-y;
             transform-origin: top;
+            margin: 0 auto; /* 居中显示下半框 */
         }
 
         .image-container {
