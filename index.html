@@ -34,11 +34,9 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 0;
-            width: 1200px; /* 设置下半框容器宽度为1200px */
-            max-width: calc(100vw - 40px); /* 在手机上确保留出边距 */
-            margin: 0 auto; /* 居中显示下半框 */
             touch-action: pan-y;
             transform-origin: top;
+            margin: 0 auto; /* 居中显示下半框 */
         }
 
         .image-container {
@@ -75,6 +73,13 @@
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
             document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
             document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
+
+            // 设置下半框的宽度与第一张图片一致
+            const firstImage = document.querySelector('#image-container-top .image');
+            if (firstImage) {
+                const width = firstImage.naturalWidth; // 获取原始宽度
+                document.getElementById('bottom').style.width = `${width}px`; // 设置下半框宽度
+            }
         };
 
         document.getElementById('top').onscroll = function() {
