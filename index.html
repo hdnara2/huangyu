@@ -21,16 +21,11 @@
 
         .top, .bottom {
             flex: 1;
-            width: 5000px; /* 上半部分宽度 */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 0;
             touch-action: pan-y;
             transform-origin: top;
-        }
-
-        .bottom {
-            width: auto; /* 下半部分宽度自适应原图尺寸 */
         }
 
         .image-container {
@@ -67,6 +62,13 @@
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
             document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
             document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
+
+            // 设置下半部分容器的宽度为第一张图片的宽度
+            const firstImage = document.querySelector('#image-container-bottom .image');
+            if (firstImage) {
+                const imageWidth = firstImage.naturalWidth; // 获取图片的原始宽度
+                document.getElementById('bottom').style.width = `${imageWidth}px`;
+            }
         };
 
         document.getElementById('top').onscroll = function() {
@@ -116,13 +118,6 @@
             img.className = 'image';
             imageContainerBottom.appendChild(img);
         }
-
-        // 设置下半部分容器的宽度为图片的总宽度
-        const bottomContainer = document.getElementById('bottom');
-        const totalWidth = Array.from(imageContainerBottom.children).reduce((total, img) => {
-            return total + img.naturalWidth; // 获取原始宽度
-        }, 0);
-        bottomContainer.style.width = `${totalWidth}px`;
 
         enablePinchZoom(imageContainerTop.parentNode, 'topScale');
         enablePinchZoom(imageContainerBottom.parentNode, 'bottomScale');
