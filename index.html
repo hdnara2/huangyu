@@ -19,8 +19,19 @@
             height: 100%;
         }
 
-        .top, .bottom {
+        .top {
             flex: 1;
+            width: 5000px; /* 上半部分宽度为5000像素 */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0;
+            touch-action: pan-y;
+            transform-origin: top;
+        }
+
+        .bottom {
+            flex: 1;
+            width: 600px; /* 下半部分宽度为600像素 */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 0;
@@ -62,13 +73,6 @@
             document.getElementById('bottom').scrollTop = localStorage.getItem('bottomScroll') || 0;
             document.getElementById('top').style.transform = `scale(${localStorage.getItem('topScale') || 1})`;
             document.getElementById('bottom').style.transform = `scale(${localStorage.getItem('bottomScale') || 1})`;
-
-            // 设置下半部分容器的宽度为第一张图片的宽度
-            const firstImage = document.querySelector('#image-container-bottom .image');
-            if (firstImage) {
-                const imageWidth = firstImage.naturalWidth; // 获取图片的原始宽度
-                document.getElementById('bottom').style.width = `${imageWidth}px`;
-            }
         };
 
         document.getElementById('top').onscroll = function() {
