@@ -11,31 +11,38 @@
             height: 100%;
             overflow: hidden;
             width: 100vw;
-            position: relative;
         }
 
-        .top, .bottom {
-            position: absolute;
-            left: 0;
-            right: 0;
-            width: 100%;
+        .split {
+            display:flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 1000vw;
+            margin-left: -450vw;
+        }
+
+        .top {
+            flex: 1;
             overflow-y: auto;
             overflow-x: hidden; /* 禁用横向滚动 */
             -webkit-overflow-scrolling: touch;
             padding: 0;
+            width: 100%;
+            touch-action: pan-y; /* 允许纵向滑动 150 2 300 5 450 8 600*/
+            transform-origin: top;
+        }
+
+       .bottom {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden; /* 禁用横向滚动 */
+            -webkit-overflow-scrolling: touch;
+            padding: 0;
+            width: 100%;
             touch-action: pan-y; /* 允许纵向滑动 */
+            transform-origin: top;
         }
-
-        .top {
-            top: 0;
-            bottom: 50%; /* 分配一半高度 */
-        }
-
-        .bottom {
-            top: 50%; /* 从中间开始 */
-            bottom: 0;
-        }
-
+        
         .image-container {
             padding: 0;
             margin: 0;
@@ -53,11 +60,15 @@
     </style>
 </head>
 <body>
-    <div class="top" id="top">
-        <div class="image-container" id="image-container-top"></div>
-    </div>
-    <div class="bottom" id="bottom">
-        <div class="image-container" id="image-container-bottom"></div>
+    <div class="split">
+        <div class="top" id="top">
+            <div class="image-container" id="image-container-top">
+            </div>
+        </div>
+        <div class="bottom" id="bottom">
+            <div class="image-container" id="image-container-bottom">
+            </div>
+        </div>
     </div>
 
     <script>
